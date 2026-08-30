@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEO投稿計画ダッシュボード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff;
+    --surface:#f6f7f9;
+    --surface-2:#eef0f3;
+    --line:#e2e5ea;
+    --ink:#1b1f27;
+    --muted:#666e7a;
+    --accent:#22384f;
+    --accent-soft:#e9edf1;
+    --good:#1c7c4d;
+    --good-soft:#e9f7ef;
+
+    --cat-campaign-fg:#9a4a06;
+    --cat-campaign-bg:#fdf1e2;
+    --cat-campaign-dot:#e08a2b;
+
+    --cat-case-fg:#a3123a;
+    --cat-case-bg:#fdedf1;
+    --cat-case-dot:#d94a70;
+
+    --cat-notice-fg:#1d4ed8;
+    --cat-notice-bg:#edf2fe;
+    --cat-notice-dot:#4a72e0;
+
+    --cat-season-fg:#166b3a;
+    --cat-season-bg:#eaf6ee;
+    --cat-season-dot:#3f9f65;
+
+    --cat-staff-fg:#6b21a8;
+    --cat-staff-bg:#f4edfb;
+    --cat-staff-dot:#9b5fd4;
+
+    font-size:18px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;
+    font-variant-numeric:tabular-nums;
+  }
+  h1,h2,h3{
+    font-family:"Zen Kaku Gothic New","Noto Sans JP",sans-serif;
+    text-wrap:balance;
+    margin:0;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:28px 20px 80px;}
+
+  /* ---------- header ---------- */
+  header.top{
+    background:var(--accent);
+    color:#fff;
+    padding:36px 20px;
+  }
+  header.top .inner{max-width:980px;margin:0 auto;}
+  .eyebrow{
+    font-size:0.85rem;
+    letter-spacing:0.08em;
+    color:#c7d2de;
+    font-weight:500;
+    margin-bottom:10px;
+  }
+  header.top h1{font-size:2rem;font-weight:900;color:#fff;}
+  header.top p{
+    margin:12px 0 0;
+    color:#d7dfe8;
+    font-size:1rem;
+    max-width:640px;
+  }
+  .sample-badge{
+    display:inline-block;
+    margin-top:16px;
+    background:rgba(255,255,255,0.14);
+    border:1px solid rgba(255,255,255,0.35);
+    color:#fff;
+    font-size:0.85rem;
+    padding:6px 14px;
+    border-radius:999px;
+  }
+
+  section{margin-top:52px;}
+  section > h2{
+    font-size:1.4rem;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  section > .lead{
+    color:var(--muted);
+    font-size:0.95rem;
+    margin:0 0 22px;
+  }
+
+  /* ---------- KPI ---------- */
+  .kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+  }
+  .kpi-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px 20px 22px;
+  }
+  .kpi-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .kpi-label{font-size:0.88rem;color:var(--muted);font-weight:500;}
+  .kpi-delta{
+    font-size:0.8rem;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:999px;
+    background:var(--good-soft);
+    color:var(--good);
+    white-space:nowrap;
+  }
+  .kpi-values{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-top:14px;
+  }
+  .kpi-before{font-size:1.05rem;color:var(--muted);text-decoration:line-through;text-decoration-color:#c7cbd2;}
+  .kpi-arrow{color:var(--muted);}
+  .kpi-after{font-size:1.75rem;font-weight:900;font-family:"Zen Kaku Gothic New",sans-serif;color:var(--ink);}
+  .kpi-unit{font-size:0.95rem;color:var(--muted);font-weight:500;}
+  .kpi-bars{margin-top:14px;display:flex;flex-direction:column;gap:6px;}
+  .bar-row{display:flex;align-items:center;gap:8px;}
+  .bar-tag{font-size:0.72rem;color:var(--muted);width:52px;flex:none;}
+  .bar-track{flex:1;background:var(--surface-2);border-radius:6px;height:8px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:6px;}
+  .bar-fill.before{background:#b9c0cb;}
+  .bar-fill.after{background:var(--accent);}
+
+  /* ---------- legend ---------- */
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 16px;
+  }
+  .legend-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:0.9rem;
+    color:var(--ink);
+    background:var(--surface);
+    border:1px solid var(--line);
+    padding:6px 12px 6px 10px;
+    border-radius:999px;
+  }
+  .dot{width:10px;height:10px;border-radius:50%;flex:none;}
+  .dot.campaign{background:var(--cat-campaign-dot);}
+  .dot.case{background:var(--cat-case-dot);}
+  .dot.notice{background:var(--cat-notice-dot);}
+  .dot.season{background:var(--cat-season-dot);}
+  .dot.staff{background:var(--cat-staff-dot);}
+
+  /* ---------- calendar ---------- */
+  .cal-scroll{overflow-x:auto;padding-bottom:4px;}
+  .cal-head,.cal-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:8px;
+    min-width:640px;
+  }
+  .cal-head{margin-bottom:8px;}
+  .cal-head div{
+    text-align:center;
+    font-size:0.82rem;
+    color:var(--muted);
+    font-weight:700;
+  }
+  .cal-head div.sun{color:var(--cat-case-fg);}
+  .cal-head div.sat{color:var(--cat-notice-fg);}
+  .cal-cell{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+    min-height:92px;
+    padding:8px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .cal-cell.empty{background:transparent;border:1px dashed var(--line);opacity:0.4;}
+  .cal-date{font-size:0.8rem;color:var(--muted);font-weight:700;}
+  .cal-post{
+    font-size:0.72rem;
+    line-height:1.4;
+    border-radius:6px;
+    padding:5px 7px;
+    font-weight:500;
+  }
+  .cal-post .cal-cat{display:block;font-weight:700;font-size:0.68rem;margin-bottom:2px;}
+  .cal-post.campaign{background:var(--cat-campaign-bg);color:var(--cat-campaign-fg);}
+  .cal-post.case{background:var(--cat-case-bg);color:var(--cat-case-fg);}
+  .cal-post.notice{background:var(--cat-notice-bg);color:var(--cat-notice-fg);}
+  .cal-post.season{background:var(--cat-season-bg);color:var(--cat-season-fg);}
+  .cal-post.staff{background:var(--cat-staff-bg);color:var(--cat-staff-fg);}
+
+  /* ---------- post/reply list ---------- */
+  .post-list{display:flex;flex-direction:column;gap:18px;}
+  .post-card{
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px 24px;
+    background:var(--bg);
+  }
+  .post-card-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .post-date{font-weight:700;font-size:1.05rem;}
+  .post-date span{color:var(--muted);font-weight:500;font-size:0.88rem;margin-left:6px;}
+  .cat-chip{
+    font-size:0.78rem;
+    font-weight:700;
+    padding:5px 12px;
+    border-radius:999px;
+  }
+  .cat-chip.campaign{background:var(--cat-campaign-bg);color:var(--cat-campaign-fg);}
+  .cat-chip.case{background:var(--cat-case-bg);color:var(--cat-case-fg);}
+  .cat-chip.notice{background:var(--cat-notice-bg);color:var(--cat-notice-fg);}
+  .cat-chip.season{background:var(--cat-season-bg);color:var(--cat-season-fg);}
+  .cat-chip.staff{background:var(--cat-staff-bg);color:var(--cat-staff-fg);}
+
+  .block-label{
+    font-size:0.78rem;
+    font-weight:700;
+    color:var(--muted);
+    letter-spacing:0.04em;
+    margin:0 0 6px;
+  }
+  .post-text{
+    background:var(--surface);
+    border-radius:12px;
+    padding:14px 16px;
+    font-size:0.96rem;
+    margin:0 0 18px;
+  }
+  .review-block{border-top:1px dashed var(--line);padding-top:16px;}
+  .review-quote{
+    font-size:0.92rem;
+    color:var(--muted);
+    margin:0 0 10px;
+    padding-left:14px;
+    border-left:3px solid var(--line);
+  }
+  .review-reply{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+  }
+  .reply-avatar{
+    flex:none;
+    width:34px;height:34px;
+    border-radius:50%;
+    background:var(--accent);
+    color:#fff;
+    font-size:0.78rem;
+    font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .reply-body{
+    background:var(--accent-soft);
+    border-radius:12px;
+    padding:12px 16px;
+    font-size:0.94rem;
+    flex:1;
+  }
+  .reply-body .reply-label{
+    display:block;
+    font-size:0.72rem;
+    font-weight:700;
+    color:var(--accent);
+    margin-bottom:4px;
+  }
+
+  /* ---------- flow reference ---------- */
+  .flow{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+  }
+  .flow-step{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px 12px;
+    font-size:0.82rem;
+    color:var(--muted);
+  }
+  .flow-step b{
+    display:block;
+    color:var(--ink);
+    font-size:0.85rem;
+    margin-bottom:4px;
+  }
+  .flow-note{
+    margin-top:14px;
+    font-size:0.85rem;
+    color:var(--muted);
+  }
+
+  footer{
+    margin-top:60px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:0.82rem;
+  }
+
+  @media (max-width:720px){
+    :root{font-size:16px;}
+    .kpi-grid{grid-template-columns:1fr 1fr;}
+    .flow{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:480px){
+    .kpi-grid{grid-template-columns:1fr;}
+    header.top h1{font-size:1.5rem;}
+    .post-card{padding:18px 16px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">ユニコスクール 活用事例デモ ー クリニックのWeb集患 + MEO対策の自動化</div>
+    <h1>MEO投稿計画ダッシュボード</h1>
+    <p>サンプル美容クリニック（架空）を題材に、AIが作成したGoogleビジネスプロフィールの投稿案・口コミ返信案と、MEO対策の成果指標をまとめた確認用ページです。</p>
+    <span class="sample-badge">全データはサンプルです。実在のクリニック・患者情報は含まれません</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <h2>成果指標（施策前 → 施策後）</h2>
+    <p class="lead">投稿・口コミ返信・写真更新の自動化を3ヶ月間運用した想定の比較データです。数値はすべてサンプルです。</p>
+    <div class="kpi-grid">
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div class="kpi-label">MEO平均掲載順位<br>（主要3キーワード平均）</div>
+          <div class="kpi-delta">62%改善</div>
+        </div>
+        <div class="kpi-values">
+          <span class="kpi-before">8.2位</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-after">3.1</span><span class="kpi-unit">位</span>
+        </div>
+        <div class="kpi-bars">
+          <div class="bar-row"><span class="bar-tag">施策前</span><div class="bar-track"><div class="bar-fill before" style="width:82%"></div></div></div>
+          <div class="bar-row"><span class="bar-tag">施策後</span><div class="bar-track"><div class="bar-fill after" style="width:31%"></div></div></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div class="kpi-label">月間新患数</div>
+          <div class="kpi-delta">+89%</div>
+        </div>
+        <div class="kpi-values">
+          <span class="kpi-before">18人</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-after">34</span><span class="kpi-unit">人 / 月</span>
+        </div>
+        <div class="kpi-bars">
+          <div class="bar-row"><span class="bar-tag">施策前</span><div class="bar-track"><div class="bar-fill before" style="width:53%"></div></div></div>
+          <div class="bar-row"><span class="bar-tag">施策後</span><div class="bar-track"><div class="bar-fill after" style="width:100%"></div></div></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div class="kpi-label">プロフィール閲覧数</div>
+          <div class="kpi-delta">+188%</div>
+        </div>
+        <div class="kpi-values">
+          <span class="kpi-before">1,200件</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-after">3,450</span><span class="kpi-unit">件 / 月</span>
+        </div>
+        <div class="kpi-bars">
+          <div class="bar-row"><span class="bar-tag">施策前</span><div class="bar-track"><div class="bar-fill before" style="width:35%"></div></div></div>
+          <div class="bar-row"><span class="bar-tag">施策後</span><div class="bar-track"><div class="bar-fill after" style="width:100%"></div></div></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div class="kpi-label">口コミ返信率</div>
+          <div class="kpi-delta">+55pt</div>
+        </div>
+        <div class="kpi-values">
+          <span class="kpi-before">45%</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-after">100</span><span class="kpi-unit">%</span>
+        </div>
+        <div class="kpi-bars">
+          <div class="bar-row"><span class="bar-tag">施策前</span><div class="bar-track"><div class="bar-fill before" style="width:45%"></div></div></div>
+          <div class="bar-row"><span class="bar-tag">施策後</span><div class="bar-track"><div class="bar-fill after" style="width:100%"></div></div></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div class="kpi-label">口コミ返信までの<br>平均時間</div>
+          <div class="kpi-delta">96%短縮</div>
+        </div>
+        <div class="kpi-values">
+          <span class="kpi-before">72時間</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-after">3</span><span class="kpi-unit">時間</span>
+        </div>
+        <div class="kpi-bars">
+          <div class="bar-row"><span class="bar-tag">施策前</span><div class="bar-track"><div class="bar-fill before" style="width:100%"></div></div></div>
+          <div class="bar-row"><span class="bar-tag">施策後</span><div class="bar-track"><div class="bar-fill after" style="width:4%"></div></div></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <div class="kpi-label">月間投稿数</div>
+          <div class="kpi-delta">+300%</div>
+        </div>
+        <div class="kpi-values">
+          <span class="kpi-before">2件</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-after">8</span><span class="kpi-unit">件 / 月</span>
+        </div>
+        <div class="kpi-bars">
+          <div class="bar-row"><span class="bar-tag">施策前</span><div class="bar-track"><div class="bar-fill before" style="width:25%"></div></div></div>
+          <div class="bar-row"><span class="bar-tag">施策後</span><div class="bar-track"><div class="bar-fill after" style="width:100%"></div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>カテゴリ凡例</h2>
+    <p class="lead">投稿は内容ごとに5つのカテゴリへ自動分類され、カレンダーと一覧で同じ色分けが使われます。</p>
+    <div class="legend">
+      <div class="legend-item"><span class="dot campaign"></span>キャンペーン告知</div>
+      <div class="legend-item"><span class="dot case"></span>症例紹介</div>
+      <div class="legend-item"><span class="dot notice"></span>お知らせ</div>
+      <div class="legend-item"><span class="dot season"></span>季節ケア情報</div>
+      <div class="legend-item"><span class="dot staff"></span>スタッフ紹介</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>投稿スケジュール（2026年9月）</h2>
+    <p class="lead">AIが週2回のペースで自動生成した投稿案のカレンダーです。日付をタップ・クリックしなくても、下の一覧で全文を確認できます。</p>
+    <div class="cal-scroll">
+      <div class="cal-head">
+        <div class="sun">日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div class="sat">土</div>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-cell empty"></div>
+        <div class="cal-cell empty"></div>
+        <div class="cal-cell"><div class="cal-date">1</div></div>
+        <div class="cal-cell">
+          <div class="cal-date">2</div>
+          <div class="cal-post campaign"><span class="cal-cat">キャンペーン</span>秋の乾燥小ジワ集中ケア</div>
+        </div>
+        <div class="cal-cell"><div class="cal-date">3</div></div>
+        <div class="cal-cell"><div class="cal-date">4</div></div>
+        <div class="cal-cell">
+          <div class="cal-date">5</div>
+          <div class="cal-post case"><span class="cal-cat">症例紹介</span>ピコレーザーでシミ治療</div>
+        </div>
+
+        <div class="cal-cell"><div class="cal-date">6</div></div>
+        <div class="cal-cell"><div class="cal-date">7</div></div>
+        <div class="cal-cell"><div class="cal-date">8</div></div>
+        <div class="cal-cell">
+          <div class="cal-date">9</div>
+          <div class="cal-post notice"><span class="cal-cat">お知らせ</span>連休の診療時間変更</div>
+        </div>
+        <div class="cal-cell"><div class="cal-date">10</div></div>
+        <div class="cal-cell"><div class="cal-date">11</div></div>
+        <div class="cal-cell">
+          <div class="cal-date">12</div>
+          <div class="cal-post season"><span class="cal-cat">季節ケア</span>秋の紫外線対策コラム</div>
+        </div>
+
+        <div class="cal-cell"><div class="cal-date">13</div></div>
+        <div class="cal-cell"><div class="cal-date">14</div></div>
+        <div class="cal-cell"><div class="cal-date">15</div></div>
+        <div class="cal-cell">
+          <div class="cal-date">16</div>
+          <div class="cal-post staff"><span class="cal-cat">スタッフ</span>新人看護師の紹介</div>
+        </div>
+        <div class="cal-cell"><div class="cal-date">17</div></div>
+        <div class="cal-cell"><div class="cal-date">18</div></div>
+        <div class="cal-cell">
+          <div class="cal-date">19</div>
+          <div class="cal-post campaign"><span class="cal-cat">キャンペーン</span>平日限定15%オフ</div>
+        </div>
+
+        <div class="cal-cell"><div class="cal-date">20</div></div>
+        <div class="cal-cell"><div class="cal-date">21</div></div>
+        <div class="cal-cell"><div class="cal-date">22</div></div>
+        <div class="cal-cell">
+          <div class="cal-date">23</div>
+          <div class="cal-post case"><span class="cal-cat">症例紹介</span>HIFUでたるみケア</div>
+        </div>
+        <div class="cal-cell"><div class="cal-date">24</div></div>
+        <div class="cal-cell"><div class="cal-date">25</div></div>
+        <div class="cal-cell"><div class="cal-date">26</div></div>
+
+        <div class="cal-cell">
+          <div class="cal-date">27</div>
+          <div class="cal-post notice"><span class="cal-cat">お知らせ</span>ご紹介キャンペーン開始</div>
+        </div>
+        <div class="cal-cell"><div class="cal-date">28</div></div>
+        <div class="cal-cell"><div class="cal-date">29</div></div>
+        <div class="cal-cell"><div class="cal-date">30</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>投稿案 & 口コミ返信案 一覧（サンプル8件）</h2>
+    <p class="lead">各投稿にはGoogleビジネスプロフィールへの投稿文と、同時期に想定される口コミへのAI返信案をセットで用意しています。</p>
+
+    <div class="post-list">
+
+      <article class="post-card">
+        <div class="post-card-head">
+          <div class="post-date">9月2日<span>（水）</span></div>
+          <div class="cat-chip campaign">キャンペーン告知</div>
+        </div>
+        <p class="block-label">投稿文</p>
+        <p class="post-text">涼しくなり始めるこの季節、肌の乾燥が気になる方へ。9月限定で「ハイドラフェイシャル＋高保湿パック」がセットで20%オフになるキャンペーンを実施中です。カウンセリングは無料ですので、お気軽にご相談ください。ご予約はプロフィールの予約ボタンからどうぞ。</p>
+        <div class="review-block">
+          <p class="block-label">想定される口コミ</p>
+          <p class="review-quote">「スタッフの方の説明が丁寧で、安心して施術を受けられました。」</p>
+          <div class="review-reply">
+            <div class="reply-avatar">院</div>
+            <div class="reply-body"><span class="reply-label">クリニックからの返信案</span>この度は口コミをいただきありがとうございます。丁寧なカウンセリングを心掛けておりますので、そのように感じていただけて大変嬉しく思います。今後もお肌の状態に合わせたご提案を続けてまいります。またのご来院を心よりお待ちしております。</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="post-card">
+        <div class="post-card-head">
+          <div class="post-date">9月5日<span>（土）</span></div>
+          <div class="cat-chip case">症例紹介</div>
+        </div>
+        <p class="block-label">投稿文</p>
+        <p class="post-text">【症例紹介】頬のシミにお悩みだった患者様に、ピコレーザー治療をご提案しました。3回の施術で、明るいトーンの肌印象へ。効果には個人差がありますが、経過も含めて丁寧にご説明いたします。詳しい治療内容はスタッフまでお気軽にお尋ねください。</p>
+        <div class="review-block">
+          <p class="block-label">想定される口コミ</p>
+          <p class="review-quote">「効果を実感できて満足しています。」</p>
+          <div class="review-reply">
+            <div class="reply-avatar">院</div>
+            <div class="reply-body"><span class="reply-label">クリニックからの返信案</span>温かいお言葉をありがとうございます。効果を実感していただけたとのこと、私たちにとって何より嬉しいご報告です。今後も安心して通っていただけるクリニックを目指してまいります。</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="post-card">
+        <div class="post-card-head">
+          <div class="post-date">9月9日<span>（水）</span></div>
+          <div class="cat-chip notice">お知らせ</div>
+        </div>
+        <p class="block-label">投稿文</p>
+        <p class="post-text">【診療時間変更のお知らせ】9月の連休期間中、一部診療時間を変更させていただきます。詳しい時間帯はプロフィール内の営業時間、またはお電話にてご確認ください。ご不便をおかけしますが、よろしくお願いいたします。</p>
+        <div class="review-block">
+          <p class="block-label">想定される口コミ</p>
+          <p class="review-quote">「予約が取りやすくて助かります。」</p>
+          <div class="review-reply">
+            <div class="reply-avatar">院</div>
+            <div class="reply-body"><span class="reply-label">クリニックからの返信案</span>いつもご利用いただきありがとうございます。ご希望に沿ったご予約が取りやすいよう、枠の調整を工夫しております。今後も通いやすいクリニックづくりに努めてまいります。</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="post-card">
+        <div class="post-card-head">
+          <div class="post-date">9月12日<span>（土）</span></div>
+          <div class="cat-chip season">季節ケア情報</div>
+        </div>
+        <p class="block-label">投稿文</p>
+        <p class="post-text">【季節のスキンケア情報】秋も紫外線量は夏の約半分残っています。日焼け止めの塗り直しと保湿ケアを意識するだけで、シミ・くすみの予防に効果的です。当院オリジナルの日焼け止めも取り扱っておりますので、ぜひスタッフにお声がけください。</p>
+        <div class="review-block">
+          <p class="block-label">想定される口コミ</p>
+          <p class="review-quote">「駅から近くて通いやすいです。」</p>
+          <div class="review-reply">
+            <div class="reply-avatar">院</div>
+            <div class="reply-body"><span class="reply-label">クリニックからの返信案</span>ご来院ありがとうございます。アクセスの良さもクリニック選びの大切なポイントかと思いますので、そのようにおっしゃっていただけて嬉しいです。これからも通いやすさと安心の両立を心掛けてまいります。</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="post-card">
+        <div class="post-card-head">
+          <div class="post-date">9月16日<span>（水）</span></div>
+          <div class="cat-chip staff">スタッフ紹介</div>
+        </div>
+        <p class="block-label">投稿文</p>
+        <p class="post-text">【スタッフ紹介】9月より新しい看護師が加わりました。丁寧なカウンセリングを心掛けておりますので、初めての施術で不安な方もお気軽にご相談ください。スタッフ一同、皆様のご来院をお待ちしております。</p>
+        <div class="review-block">
+          <p class="block-label">想定される口コミ</p>
+          <p class="review-quote">「看護師さんの対応が優しかったです。」</p>
+          <div class="review-reply">
+            <div class="reply-avatar">院</div>
+            <div class="reply-body"><span class="reply-label">クリニックからの返信案</span>嬉しいお言葉をありがとうございます。緊張されている患者様が少しでも安心できるよう、スタッフ一同笑顔での対応を心掛けております。ぜひまたお気軽にお立ち寄りください。</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="post-card">
+        <div class="post-card-head">
+          <div class="post-date">9月19日<span>（土）</span></div>
+          <div class="cat-chip campaign">キャンペーン告知</div>
+        </div>
+        <p class="block-label">投稿文</p>
+        <p class="post-text">【平日限定キャンペーン】月曜〜金曜の日中にご来院いただける方限定で、人気の美肌施術が15%オフになります。お仕事や学校帰りにもご利用いただきやすい時間帯をご用意しております。ご予約はお電話またはWeb予約フォームから承っております。</p>
+        <div class="review-block">
+          <p class="block-label">想定される口コミ</p>
+          <p class="review-quote">「平日の夜も診てもらえて助かりました。」</p>
+          <div class="review-reply">
+            <div class="reply-avatar">院</div>
+            <div class="reply-body"><span class="reply-label">クリニックからの返信案</span>ご来院ありがとうございます。お忙しい方にも通っていただけるよう診療時間を工夫しておりますので、そのようにお声をいただけてとても励みになります。今後ともよろしくお願いいたします。</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="post-card">
+        <div class="post-card-head">
+          <div class="post-date">9月23日<span>（水）</span></div>
+          <div class="cat-chip case">症例紹介</div>
+        </div>
+        <p class="block-label">投稿文</p>
+        <p class="post-text">【症例紹介】フェイスラインのたるみが気になっていた患者様に、HIFU（ハイフ）施術をご提案しました。ダウンタイムがほとんどなく、施術当日からメイクも可能です。お悩みに合わせたプランをご提案いたしますので、まずは無料カウンセリングへどうぞ。</p>
+        <div class="review-block">
+          <p class="block-label">想定される口コミ</p>
+          <p class="review-quote">「ダウンタイムがなくて助かりました。」</p>
+          <div class="review-reply">
+            <div class="reply-avatar">院</div>
+            <div class="reply-body"><span class="reply-label">クリニックからの返信案</span>ご感想をありがとうございます。お仕事や日常生活への影響を最小限にできるよう施術方法もご提案しておりますので、安心してご利用いただけて何よりです。またのご来院をお待ちしております。</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="post-card">
+        <div class="post-card-head">
+          <div class="post-date">9月27日<span>（日）</span></div>
+          <div class="cat-chip notice">お知らせ</div>
+        </div>
+        <p class="block-label">投稿文</p>
+        <p class="post-text">【ご紹介キャンペーン】お友達・ご家族をご紹介いただいた方に、次回施術で使える特典クーポンをプレゼント中です。皆様からの口コミやご紹介がクリニック運営の励みになっています。今後ともどうぞよろしくお願いいたします。</p>
+        <div class="review-block">
+          <p class="block-label">想定される口コミ</p>
+          <p class="review-quote">「先生の説明が分かりやすく、信頼できました。」</p>
+          <div class="review-reply">
+            <div class="reply-avatar">院</div>
+            <div class="reply-body"><span class="reply-label">クリニックからの返信案</span>貴重なお言葉をありがとうございます。治療方針や費用についてご納得いただいた上で施術を受けていただけるよう、説明を大切にしております。今後も信頼していただけるクリニックであり続けられるよう努めてまいります。</div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>自動化の流れ（参考）</h2>
+    <p class="lead">今回のダッシュボードは、下記フローの「3. ダッシュボード出力」に当たる部分をサンプルで再現したものです。1と4のAPI連携・通知部分は、実際の電子カルテ／予約システムやSlack・LINEと接続して初めて動く工程のため、この体験版では省略しています。</p>
+    <div class="flow">
+      <div class="flow-step"><b>1. データ取得</b>電子カルテ・レセコン・予約システムからAPIで自動取得</div>
+      <div class="flow-step"><b>2. AI分析</b>取得データを業務ルールに沿ってAIが自動処理</div>
+      <div class="flow-step"><b>3. 出力</b>投稿案・返信案・KPIをダッシュボードへ自動出力</div>
+      <div class="flow-step"><b>4. 承認</b>院長・医事課・看護部へSlack/LINE通知し承認</div>
+      <div class="flow-step"><b>5. 改善</b>月次で処理精度・業務効率を検証しルールを改善</div>
+    </div>
+  </section>
+
+  <footer>
+    本ページに含まれるクリニック名・数値・投稿文・口コミ・スタッフ情報はすべて説明用のサンプルデータであり、実在の人物・団体・医療機関とは関係ありません。実際の運用では、Googleビジネスプロフィールへの投稿・返信内容は必ず院長・医事責任者が最終確認の上で承認してください。
+  </footer>
+
+</div>
+</body>
+</html>
