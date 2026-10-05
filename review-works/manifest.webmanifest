@@ -1,0 +1,10 @@
+{
+  "name": "Review Works Evolve",
+  "short_name": "Review Works",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#0f172a",
+  "description": "Google Mapsレビュー作成・返信・意味情報分析・安全チェック支援",
+  "icons": [{"src":"assets/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
