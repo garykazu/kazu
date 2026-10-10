@@ -2,7 +2,7 @@
 Version 0.1.0
 
 ## Read order
-CORE.md → QUESTIONS.json → HOOKS.json → SAFETY.md → 店舗プロフィール → 投稿履歴
+CORE.md → QUESTIONS.json → HOOKS.json → DAILY_HINTS.json → SAFETY.md → 店舗プロフィール → 投稿履歴
 
 ## Workflow
 1. 既存資料を最優先で読む。
@@ -13,8 +13,8 @@ CORE.md → QUESTIONS.json → HOOKS.json → SAFETY.md → 店舗プロフィ�
 6. HOOKSから今日のフック候補を作る。
 7. 時事・トレンドは鮮度と出典を確認できる場合だけ「現在話題」と表現する。
 8. 王道/半歩ずらし/一歩ずらしを選択。
-9. 同じテーマが続かないよう投稿履歴を参照。
-10. Threads向けに人間味ある投稿を生成する。
+9. DAILY_HINTSから施設内・来店前後・家でもできる小さなヒントを必要に応じて掛け合わせる。\n10. 同じテーマが続かないよう投稿履歴を参照。
+11. Threads向けに人間味ある投稿を生成する。
 
 ## Rules
 - 趣味を毎回無理に入れない。
