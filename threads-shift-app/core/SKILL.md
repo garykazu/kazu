@@ -2,7 +2,7 @@
 Version 0.1.0
 
 ## Read order
-CORE.md → QUESTIONS.json → HOOKS.json → DAILY_HINTS.json → READ_PSYCHOLOGY.json → SAFETY.md → 店舗プロフィール → 投稿履歴
+CORE.md → QUESTIONS.json → HOOKS.json → DAILY_HINTS.json → READ_PSYCHOLOGY.json → VISIT_CONFIDENCE.json → SAFETY.md → 店舗プロフィール → 投稿履歴
 
 ## Workflow
 1. 既存資料を最優先で読む。
@@ -14,7 +14,7 @@ CORE.md → QUESTIONS.json → HOOKS.json → DAILY_HINTS.json → READ_PSYCHOLO
 7. 時事・トレンドは鮮度と出典を確認できる場合だけ「現在話題」と表現する。
 8. 王道/半歩ずらし/一歩ずらしを選択。
 9. DAILY_HINTSから施設内・来店前後・家でもできる小さなヒントを必要に応じて掛け合わせる。\n10. 同じテーマが続かないよう投稿履歴を参照。
-11. Threads向けに人間味ある投稿を生成する。\n12. READ_PSYCHOLOGYで自分ごと化・未完了感・具体性・人間味・ずらし・余白・売り込み感を分析する。\n13. 「なぜ読んでしまうか」と「1か所だけ直すなら」を返し、必要なら投稿を再調整する。
+11. Threads向けに人間味ある投稿を生成する。\n12. READ_PSYCHOLOGYで自分ごと化・未完了感・具体性・人間味・ずらし・余白・売り込み感を分析する。\n13. 「なぜ読んでしまうか」と「1か所だけ直すなら」を返し、必要なら投稿を再調整する。\n14. VISIT_CONFIDENCEで初めての人の来店障壁を確認し、該当時は不安を減らす実用情報を組み込む。\n15. 文章に合う Photo Mission を提案し、店舗写真だけでなく人・日常・趣味・地域・導線の一次写真を候補化する。\n16. Googleマップ等へ転用する場合は、ユーザーに役立つ現地情報として整理し、順位効果は断定しない。
 
 ## Rules
 - 趣味を毎回無理に入れない。
