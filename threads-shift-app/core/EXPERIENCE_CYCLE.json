@@ -1,0 +1,26 @@
+{
+  "version":"0.3.0",
+  "name":"Awareness Experience Review Cycle",
+  "purpose":"広告的なメリット列挙ではなく、読者の気づきから体験・レビュー・コミュニティへ自然につなぐ全業種共通モデル",
+  "stages":[
+    {"id":"awareness","name":"Awareness","ja":"気づき","goal":"本人が自分の生活や気分に気づく問い・観察を渡す","avoid":"不安を煽る、説教、決めつけ"},
+    {"id":"story","name":"Story","ja":"人・想い","goal":"オーナー・店長・スタッフの原体験や店を始めた理由を自然に添える","avoid":"美談の創作、過度な自慢"},
+    {"id":"daily_hint","name":"Daily Hint","ja":"小さな知恵","goal":"その店だから伝えられる過ごし方・食べ方・楽しみ方・習慣を一つ渡す","avoid":"未確認の効果効能"},
+    {"id":"experience","name":"Experience","ja":"体験","goal":"来店したらどんな時間・選択肢があるか想像できるようにする","avoid":"全員に同じ体験を約束する"},
+    {"id":"review_baton","name":"Review Baton","ja":"レビューのバトン","goal":"既存レビューを次の人の判断材料として案内し、体験後は本人の言葉で次の人へ渡してもらう","avoid":"星5要求、肯定的レビューの誘導、見返りによる評価操作"},
+    {"id":"community","name":"Community","ja":"みんなで育てる","goal":"良かった点も改善してほしい点も含め、利用者の声で場所を育てる姿勢を示す","avoid":"批判的意見の抑制"}
+  ],
+  "review_baton_phrases":[
+    "私たちの説明だけでなく、実際に体験した方のレビューも参考にしてみてください。",
+    "もし体験して感じたことがあれば、今度はあなた自身の言葉で次の方へ渡してもらえたら嬉しいです。",
+    "良かったことも、こうだったらもっと嬉しいということも、場所を育てる大切な声です。"
+  ],
+  "review_rules":{
+    "use_only_real_reviews":true,
+    "quote_or_paraphrase_requires_source":true,
+    "do_not_invent_customer_voice":true,
+    "no_positive_only_request":true,
+    "no_rating_target":true,
+    "no_incentivized_sentiment":true
+  }
+}
