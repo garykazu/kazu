@@ -31,6 +31,12 @@ Version: 0.1.0
 Daily Hintは確認済みの施設情報と一般提案を区別し、安全説明を優先する。
 詳細は DAILY_HINTS.json を参照。
 
+## Awareness → Experience → Review Cycle
+全業種共通の投稿循環は Awareness（気づき）→ Story（人・想い）→ Daily Hint（小さな知恵）→ Experience（体験）→ Review Baton（レビューのバトン）→ Community（みんなで育てる）。
+メリットを直接列挙するより、読者自身が生活・気分に気づける問いや観察を入口にする。
+実在するレビューは「次の人が判断するための体験情報」として扱う。体験後は肯定的評価を求めず、本人の率直な言葉を次の人へ渡してもらう。
+詳細は EXPERIENCE_CYCLE.json。業種別差し替えは VERTICALS.json。
+
 ## Output
 1. 今日のフック
 2. なぜこの店に合うか
