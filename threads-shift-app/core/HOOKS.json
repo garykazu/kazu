@@ -1,0 +1,45 @@
+{
+  "version": "0.1.0",
+  "sources": [
+    "season",
+    "weekday",
+    "anniversary",
+    "weather",
+    "local",
+    "zodiac",
+    "trend"
+  ],
+  "zodiac": {
+    "mode": "daily_rotation",
+    "signs": [
+      "牡羊座",
+      "牡牛座",
+      "双子座",
+      "蟹座",
+      "獅子座",
+      "乙女座",
+      "天秤座",
+      "蠍座",
+      "射手座",
+      "山羊座",
+      "水瓶座",
+      "魚座"
+    ],
+    "rule": "entertainment_only_no_guaranteed_luck"
+  },
+  "trend": {
+    "criteria": [
+      "buzz",
+      "brand_relevance",
+      "risk",
+      "shelf_life"
+    ],
+    "blocked_topics": [
+      "災害への便乗",
+      "事故・死亡への便乗",
+      "戦争・差別への便乗",
+      "自殺・事件への便乗"
+    ],
+    "rule": "外部で確認できない流行度を創作しない"
+  }
+}
