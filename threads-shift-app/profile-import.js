@@ -39,9 +39,9 @@ async function readProfileFile(file){
 }
 
 const PROFILE_FIELDS = [
- ['brand','店舗・ブランド名',['ブランド名','店舗名','店名']],
+ ['brand','店舗・ブランド名',['ブランド名','店舗名','店名','お店の名前']],
  ['category','業種',['業種']],
- ['strength','強み・特徴',['強み','特徴','他店と比べて']],
+ ['strength','強み・特徴',['強み','特徴','他店と比べて','うちだけのこと','競合と比べたメリット']],
  ['origin','生い立ち・原体験',['生い立ち','原体験','出身','育ち','幼少','経歴','過去の失敗']],
  ['founding','店を始めた理由',['店を始めた理由','始めた','創業','開業','きっかけ','店名・ブランド名に込めた']],
  ['hobby','趣味',['趣味','好きなこと','仕事以外で']],
@@ -53,8 +53,8 @@ const PROFILE_FIELDS = [
  ['workValue','店づくりの価値観',['店づくり','その価値観は','絶対に妥協']],
  ['localStory','店の歴史・地域',['店の歴史','地域','地元','場所','歴史','この場所を']],
  ['staffStory','スタッフ',['スタッフ','店長','従業員']],
- ['customerVoice','顧客像・お客様の声',['お客様','顧客','来店理由','口コミ']],
- ['wish','届けたい気持ち・未来',['持ち帰って','願い','帰る時','これから店を','5年後','お客様にどんな時間']]
+ ['customerVoice','顧客像・お客様の声',['お客様','顧客','来店理由','口コミ','どんな方']],
+ ['wish','届けたい気持ち・未来',['持ち帰って','願い','帰る時','これから店を','5年後','お客様にどんな時間','良いこと','利用後、どんな気持ち']]
 ];
 function normalizedLabel(value){return String(value??'').normalize('NFKC').replace(/^[\s\d.、)（(①-⑳Qq：:・【】]+/,'').replace(/[\s?？、,。:：]/g,'').toLowerCase()}
 function profileField(label){
@@ -86,21 +86,21 @@ function tableProfileText(rows){
  const data=rows.map(row=>Array.from(row,c=>String(c??'').replace(/\r\n?/g,'\n').trim())).filter(row=>row.some(Boolean));
  if(!data.length)return '';
  const output=[];let headers=null,section='';
- const isAnswerHeading=c=>/^(回答|答え|内容|記入欄|回答欄|answer)$/i.test(c);
- const isQuestionHeading=c=>/^(質問|項目|項目名|質問項目|question)$/i.test(c);
+ const isAnswerHeading=c=>/^(回答|答え|内容|記入欄|回答欄|お店の答え|店舗の回答|オーナーの回答|answer)(?:$|[（(\s・])/i.test(c);
+ const isQuestionHeading=c=>/^(質問|項目|項目名|質問項目|question)(?:$|[（(\s・])/i.test(c);
  for(const row of data){
   const cells=row.filter(Boolean),fields=row.map(profileField);
   // Horizontal profile table, or a vertical interview table with a header row.
   if(fields.filter(Boolean).length>=2&&cells.every(c=>c.length<=100&&!/[：:]/.test(c))&&cells.filter(c=>profileField(c)).every(isProfileHeading)){headers={kind:'profile',labels:row};continue}
   if(row.some(isQuestionHeading)&&row.some(isAnswerHeading)){headers={kind:'interview',question:row.findIndex(isQuestionHeading),answer:row.findIndex(isAnswerHeading)};continue}
-  if(cells.length===1&&profileField(cells[0])&&!/[：:]/.test(cells[0])){section=cells[0];headers=null;continue}
   if(headers?.kind==='profile'){
    row.forEach((value,i)=>{if(value&&headers.labels[i])output.push(headers.labels[i]+'：'+value.replace(/\n/g,' / '))});continue;
   }
   if(headers?.kind==='interview'){
    const question=row[headers.question]||section,answer=row[headers.answer];
-   if(question&&answer)output.push(question+'：'+answer.replace(/\n/g,' / '));continue;
+   if(question&&answer)output.push(question.replace(/[：:]/g,'・')+'：'+answer.replace(/\n/g,' / '));continue;
   }
+  if(cells.length===1&&profileField(cells[0])&&!/[：:]/.test(cells[0])){section=cells[0];headers=null;continue}
   // Skip empty leading cells and numbering, retain question/answer association.
   const first=row.findIndex(c=>c&&!/^\d+[.)、]?$/.test(c));
   if(first<0)continue;

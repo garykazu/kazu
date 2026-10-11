@@ -44,3 +44,20 @@ test('empty Google table and failed/private Google response are errors',()=>{
  assert.throws(()=>context.googleTableText({status:'error',errors:[{reason:'access_denied'}]}),/共有/);
  assert.equal(context.googleTableText({status:'ok',table:{cols:[{},{}],rows:[{c:[{v:'趣味'},{v:'写真'}]}]}}),'趣味：写真');
 });
+
+test('owner answer columns exclude draft answers, notes, and missing responses',()=>{
+ const text=context.tableProfileText([
+  ['質問','お店の答え（ここに書く）','こちらの下書き（仮）'],
+  ['1　お店の名前は？','実店舗','仮の店名'],
+  ['3　こだわり1：外せない価値は？','自分の時間を大切にする','自動生成した案'],
+  ['3　こだわり2','','未確認の案'],
+  ['スタッフのための注意事項','',''],
+  ['質問・確認事項','回答・結果（記入欄）','確認先・用途・補足'],
+  ['5　どんな方？2','地域の人','確認先のメモ']
+ ]);
+ const candidates=context.extractProfileCandidates(text);
+ assert.equal(candidates.find(c=>c.id==='brand').value,'実店舗');
+ assert.equal(candidates.find(c=>c.id==='values').value,'自分の時間を大切にする');
+ assert.equal(candidates.find(c=>c.id==='customerVoice').value,'地域の人');
+ assert.doesNotMatch(text,/仮の店名|自動生成した案|未確認の案|注意事項|確認先のメモ/);
+});
